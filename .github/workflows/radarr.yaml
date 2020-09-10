@@ -2,9 +2,6 @@ name: radarr
 on:
   schedule:
     - cron: '*/30 * * * *'
-  push:
-    paths:
-      - .github/workflows/${{ github.workflow }}.yaml
   workflow_dispatch:
     inputs:
       version:

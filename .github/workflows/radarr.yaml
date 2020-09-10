@@ -27,7 +27,7 @@ jobs:
         id: check-tag
         with:
           image: ${{ env.IMAGES }}
-          tag: ${{ inputs.tag || env.version }}
+          tag: ${{ github.event.inputs.tags || env.version }}
   multiarch:
     needs: version-check
     if: ${{ ! needs.version-check.outputs.tag || inputs.ignore-existing-tag }}

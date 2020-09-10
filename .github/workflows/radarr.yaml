@@ -30,7 +30,7 @@ jobs:
           tag: ${{ github.event.inputs.tags || env.version }}
   multiarch:
     needs: version-check
-    if: ${{ ! needs.version-check.outputs.tag || inputs.ignore-existing-tag }}
+    if: ${{ ! needs.version-check.outputs.tag || github.event.inputs.ignore-existing-tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -34,6 +34,8 @@ jobs:
     needs: version-check
     if: ${{ ! needs.version-check.outputs.tag || github.event.inputs.ignore-existing-tag }}
     runs-on: ubuntu-latest
+    outputs:
+      fully-qualified-target-images: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -62,8 +64,8 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-  multiarch-build:
-    needs: prepare
+  build:
+    needs: [version-check, prepare]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -85,8 +87,8 @@ jobs:
           for image in "${images[@]}"; do
               docker buildx imagetools inspect ${image}
           done
-  multiarch-push:
-    needs: multiarch-build
+  push:
+    needs: [version-check, prepare, build]
     runs-on: ubuntu-latest
     steps:
       - name: Build and Push
@@ -96,7 +98,7 @@ jobs:
           file: ./images/${{ github.workflow }}/Dockerfile
           build-args: VERSION=${{ needs.version-check.outputs.tag }}
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
+          tags: ${{ needs.prepare.outputs.fully-qualified-target-images }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Inspect

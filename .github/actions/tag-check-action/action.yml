@@ -24,7 +24,7 @@ runs:
         TAG="$(curl -s https://registry.hub.docker.com/v1/repositories/${{ inputs.image }}/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"
         if [[ -n "$TAG" ]]
         then
-          echo "🎉 Match found! - ${{ inputs.image }}:{{ inputs.tag }}"
+          echo "🎉 Match found! - ${{ inputs.image }}:${{ inputs.tag }}"
           echo "::set-output name=tag::${{ inputs.tag }}"
         else
           echo "❌ Could not find a tag matching ${{ inputs.tag }} for ${{ inputs.image }}"

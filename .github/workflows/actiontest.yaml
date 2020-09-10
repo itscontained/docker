@@ -1,7 +1,6 @@
 name: actiontest
 on:
   workflow_dispatch:
-
 jobs:
   actiontest:
     runs-on: ubuntu-latest
@@ -9,3 +8,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/docker-multi-login
         name: Docker Multi Login
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}

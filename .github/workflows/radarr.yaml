@@ -125,6 +125,7 @@ jobs:
           tags: ${{ needs.prepare.outputs.fully-qualified-target-images }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+          push: true
       - name: Inspect
         run: |
           IFS=',' read -r -a images <<< "${{ needs.prepare.outputs.fully-qualified-target-images }}"

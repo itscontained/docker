@@ -6,18 +6,18 @@ runs:
     - shell: bash
       run: |
         echo "🔑 Logging into dockerhub..."
-        if docker login --username ${{ env.DOCKERHUB_USERNAME }} --password ${{ env.DOCKERHUB_PASSWORD }} > /dev/null 2>&1; then
+        if docker login --username ${{ fromJSON(env.secrets).DOCKERHUB_USERNAME }} --password ${{ fromJSON(env.secrets).DOCKERHUB_PASSWORD }} > /dev/null 2>&1; then
           echo "🎉 Login Succeeded!"
         fi
     - shell: bash
       run: |
         echo "🔑 Logging into quay.io..."
-        if docker login quay.io --username ${{ env.QUAY_USERNAME }} --password ${{ env.QUAY_PASSWORD }} > /dev/null 2>&1; then
+        if docker login quay.io --username ${{ fromJSON(env.secrets).QUAY_USERNAME }} --password ${{ fromJSON(env.secrets).QUAY_PASSWORD }} > /dev/null 2>&1; then
           echo "🎉 Login Succeeded!"
         fi
     - shell: bash
       run: |
         echo "🔑 Logging into ghcr.io..."
-        if docker login ghcr.io --username ${{ env.GHCR_USERNAME }} --password ${{ env.GHCR_PASSWORD }} > /dev/null 2>&1; then
+        if docker login ghcr.io --username ${{ fromJSON(env.secrets).GHCR_USERNAME }} --password ${{ fromJSON(env.secrets).GHCR_PASSWORD }} > /dev/null 2>&1; then
           echo "🎉 Login Succeeded!"
         fi

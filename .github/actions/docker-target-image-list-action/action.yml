@@ -31,6 +31,7 @@ runs:
           for image in "${images[@]}"; do
             for tag in "${tags[@]}"; do
               FQTI="$FQTI,${registry}/${image}:${tag}"
+            done
           done
         done
         echo ::set-output name=fully-qualified-target-images::${FQTI}

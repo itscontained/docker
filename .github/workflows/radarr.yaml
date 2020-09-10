@@ -12,8 +12,7 @@ on:
         required: false
       ignoreVersionCheck:
         description: 'true/false'
-        required: true
-        default: 'false'
+        required: false
 
 jobs:
   version-check:
@@ -27,7 +26,7 @@ jobs:
           export VERSION=$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
           echo VERSION=$VERSION
           MATCH="$(curl -s https://registry.hub.docker.com/v1/repositories/itscontained/radarr/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"
-          if [[ -z "$MATCH" ]] || [[ "${{ github.event.inputs.ignoreVersionCheck }}" == "true" ]]
+          if [[ -z "$MATCH" ]] || [[ "${{ github.event.inputs.ignoreVersionCheck }}" != "" ]]
           then
             echo Setting version output for build job
             echo ::set-output name=version::$VERSION
@@ -52,6 +51,7 @@ jobs:
         with:
           install: true
           version: latest
+          driver-opts: image=moby/buildkit:master
 
       - name: Login to DockerHub
         uses: docker/login-action@v1

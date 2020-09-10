@@ -4,11 +4,11 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
-      version:
-        description: 'version'
+      tag:
+        description: 'Use this tag instead of most recent'
         required: false
-      ignoreVersionCheck:
-        description: 'true/false'
+      ignore-existing-tag:
+        description: 'Ignore existing tag if "true"'
         required: false
 env:
   IMAGES: ${{ github.repository_owner }}/${{ github.workflow }}
@@ -17,25 +17,20 @@ jobs:
   version-check:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check-tag.outputs.tag }}
     steps:
-      - name: Get Version
+      - name: Get Upstream Version
         id: check
-        run: |
-          export VERSION=$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
-          echo VERSION=$VERSION
-          MATCH="$(curl -s https://registry.hub.docker.com/v1/repositories/itscontained/radarr/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"
-          if [[ -z "$MATCH" ]] || [[ "${{ github.event.inputs.ignoreVersionCheck }}" != "" ]]
-          then
-            echo Setting version output for build job
-            echo ::set-output name=version::$VERSION
-          else
-            echo Found existing tag in repo
-            echo ::set-output name=version::""
-          fi
+        run: echo ::set-env name=version::$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
+      - uses: ./.github/actions/tag-check-action
+        name: Check Tag Against DockerHub
+        id: check-tag
+        with:
+          image: ${{ env.IMAGES }}
+          tag: ${{ env.version }}
   multiarch:
     needs: version-check
-    if: needs.version-check.outputs.version
+    if: "! needs.version-check.outputs.tag || inputs.ignoreEx"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,7 +38,6 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v1
         with:
           install: true
@@ -63,13 +57,13 @@ jobs:
         id: gen-tags
         with:
           images: ${{ env.IMAGES }}
-          tags: ${{ needs.version-check.outputs.version }}
+          tags: ${{ needs.version-check.outputs.tag }}
       - name: Build and Push
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./images/${{ github.workflow }}/Dockerfile
-          build-args: VERSION=${{ needs.version-check.outputs.version }}
+          build-args: VERSION=${{ needs.version-check.outputs.tag }}
           platforms: ${{ env.PLATFORMS }}
           push: true
           tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}

@@ -27,6 +27,11 @@ runs:
         IFS=',' read -r -a images <<< "${{ inputs.images }}"
         IFS=',' read -r -a tags <<< "${{ inputs.tags }}"
         FQTI=""
+        echo "Generating fully qualified docker target images for:"
+        echo "🐋 Registries: ${#registries[@]}"
+        echo "📷 Images:     ${#images[@]}"
+        echo "🏷️ Tags:       ${#tags[@]}"
+        echo "🧮 Total:      $((${#registries[@]}*${#images[@]}*${#tags[@]}))"
         for registry in "${registries[@]}"; do
           for image in "${images[@]}"; do
             for tag in "${tags[@]}"; do

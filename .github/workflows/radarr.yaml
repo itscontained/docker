@@ -93,4 +93,4 @@ jobs:
             ghcr.io/itscontained/radarr:${{ needs.version-check.outputs.version }}
       - name: Inspect
         run: |
-          docker buildx imagetools inspect itscontained/radarr:${{ steps.prep.outputs.version }}
+          docker buildx imagetools inspect itscontained/radarr:${{ needs.version-check.outputs.version }}

@@ -10,7 +10,10 @@ on:
       version:
         description: 'version'
         required: false
-        default: ''
+      ignoreVersionCheck:
+        description: 'true/false'
+        required: true
+        default: 'false'
 
 jobs:
   version-check:
@@ -24,7 +27,7 @@ jobs:
           export VERSION=$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
           echo VERSION=$VERSION
           MATCH="$(curl -s https://registry.hub.docker.com/v1/repositories/itscontained/radarr/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"
-          if [[ -z "$MATCH" ]]
+          if [[ -z "$MATCH" ]] || [[ "$INTPUT_IGNOREVERSIONCHECK" == "true" ]]
           then
             echo Setting version output for build job
             echo ::set-output name=version::$VERSION
@@ -42,11 +45,6 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-        with:
-          platforms: |
-            linux/amd64
-            linux/arm64
-            linux/arm/v7
 
       - name: Set up Docker Buildx
         id: buildx
@@ -81,6 +79,10 @@ jobs:
           context: .
           file: ./images/radarr/Dockerfile
           build-args: VERSION=${{ needs.version-check.outputs.version }}
+          platforms: |
+            linux/amd64
+            linux/arm64
+            linux/arm/v7
           push: true
           tags: |
             itscontained/radarr:latest

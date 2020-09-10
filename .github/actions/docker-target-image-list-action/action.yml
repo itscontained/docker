@@ -35,7 +35,11 @@ runs:
         for registry in "${registries[@]}"; do
           for image in "${images[@]}"; do
             for tag in "${tags[@]}"; do
-              FQTI="$FQTI,${registry}/${image}:${tag}"
+              if [ -z "$FQTI" ]; then
+                FQTI="${registry}/${image}:${tag}"
+              else
+                FQTI="$FQTI,${registry}/${image}:${tag}"
+              fi
             done
           done
         done

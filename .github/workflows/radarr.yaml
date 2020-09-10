@@ -26,7 +26,7 @@ jobs:
           MATCH="$(curl -s https://registry.hub.docker.com/v1/repositories/itscontained/radarr/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"
           if [[ -z "$MATCH" ]]
           then
-            echo Setting version output for biuld job
+            echo Setting version output for build job
             echo ::set-output name=version::$VERSION
           else
             echo Found existing tag in repo
@@ -43,7 +43,10 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
-          platforms: amd64,arm64,armv7
+          platforms: |
+            linux/amd64
+            linux/arm64
+            linux/arm/v7
 
       - name: Set up Docker Buildx
         id: buildx
@@ -62,8 +65,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: quay.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -78,10 +81,6 @@ jobs:
           context: .
           file: ./images/radarr/Dockerfile
           build-args: VERSION=${{ needs.version-check.outputs.version }}
-          platforms: |
-            linux/amd64
-            linux/arm64
-            linux/arm/v7
           push: true
           tags: |
             itscontained/radarr:latest

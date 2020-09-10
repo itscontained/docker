@@ -20,8 +20,13 @@ RUN \
   mkdir -p /app /data \
   && chown -R itscontained:itscontained /app /data
 
-RUN \
-  export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
+RUN set -eux \
+  && \
+  case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='armhf' ;; \
+  esac \
   && apt-get -qq update \
   && apt-get -qq install -y --no-install-recommends \
     gnupg2 \

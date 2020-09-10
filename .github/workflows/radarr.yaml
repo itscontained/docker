@@ -86,7 +86,7 @@ jobs:
               docker buildx imagetools inspect ${image}
           done
   multiarch-push:
-    needs: multiarch-push
+    needs: multiarch-build
     runs-on: ubuntu-latest
     steps:
       - name: Build and Push

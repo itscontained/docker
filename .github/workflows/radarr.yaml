@@ -27,7 +27,8 @@ jobs:
           export VERSION=$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
           echo VERSION=$VERSION
           MATCH="$(curl -s https://registry.hub.docker.com/v1/repositories/itscontained/radarr/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"
-          if [[ -z "$MATCH" ]] || [[ "$INTPUT_IGNOREVERSIONCHECK" == "true" ]]
+          ech
+          if [[ -z "$MATCH" ]] || [[ "${{ github.event.inputs.ignoreVersionCheck }}" == "true" ]]
           then
             echo Setting version output for build job
             echo ::set-output name=version::$VERSION

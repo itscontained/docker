@@ -4,7 +4,7 @@ on:
     - cron: '*/30 * * * *'
   push:
     paths:
-      - '.github/workflows/radarr.yml'
+      - '.github/workflows/radarr.yaml'
   workflow_dispatch:
     inputs:
       version:

@@ -27,10 +27,10 @@ jobs:
         id: check-tag
         with:
           image: ${{ env.IMAGES }}
-          tag: ${{ env.version }}
+          tag: ${{ inputs.tag || env.version }}
   multiarch:
     needs: version-check
-    if: "! needs.version-check.outputs.tag || inputs.ignore-existing-tag"
+    if: ${{ ! needs.version-check.outputs.tag || inputs.ignore-existing-tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

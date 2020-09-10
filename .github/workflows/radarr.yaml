@@ -19,6 +19,8 @@ jobs:
     outputs:
       tag: ${{ steps.check-tag.outputs.tag }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Get Upstream Version
         id: check
         run: echo ::set-env name=version::$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
@@ -28,7 +30,7 @@ jobs:
         with:
           image: ${{ env.IMAGES }}
           tag: ${{ github.event.inputs.tags || env.version }}
-  multiarch:
+  prepare:
     needs: version-check
     if: ${{ ! needs.version-check.outputs.tag || github.event.inputs.ignore-existing-tag }}
     runs-on: ubuntu-latest
@@ -53,6 +55,40 @@ jobs:
         with:
           images: ${{ env.IMAGES }}
           tags: ${{ needs.version-check.outputs.tag }}
+      - name: Setup Cache
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+  multiarch-build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64, linux/arm/v7]
+    steps:
+      - name: Build and Push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./images/${{ github.workflow }}/Dockerfile
+          build-args: VERSION=${{ needs.version-check.outputs.tag }}
+          platforms: ${{ matrix.platform }}
+          tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Inspect
+        run: |
+          IFS=',' read -r -a images <<< "${{ steps.gen-tags.outputs.fully-qualified-target-images }}"
+          for image in "${images[@]}"; do
+              docker buildx imagetools inspect ${image}
+          done
+  multiarch-push:
+    needs: multiarch-push
+    runs-on: ubuntu-latest
+    steps:
       - name: Build and Push
         uses: docker/build-push-action@v2
         with:
@@ -60,8 +96,9 @@ jobs:
           file: ./images/${{ github.workflow }}/Dockerfile
           build-args: VERSION=${{ needs.version-check.outputs.tag }}
           platforms: ${{ env.PLATFORMS }}
-          push: true
           tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Inspect
         run: |
           IFS=',' read -r -a images <<< "${{ steps.gen-tags.outputs.fully-qualified-target-images }}"

@@ -1,7 +1,7 @@
 FROM ubuntu:focal
 MAINTAINER dirtycajunrice
 
-ARG VERSION
+ARG VERSION=3.0.0.3695
 
 ENV DEBIAN_FRONTEND=noninteractive \
     UMASK=0002

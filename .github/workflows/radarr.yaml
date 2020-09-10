@@ -5,6 +5,12 @@ on:
   push:
     paths:
       - '.github/workflows/radarr.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'version'
+        required: false
+        default: ''
 
 jobs:
   version-check:

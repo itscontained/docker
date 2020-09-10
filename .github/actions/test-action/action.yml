@@ -5,4 +5,4 @@ runs:
   steps:
     - shell: bash
       run: |
-        echo ${{ fromJSON(env.SECRETS) }}
+        echo ${{ fromJSON(env.SECRETS).GHCR_USERNAME }}

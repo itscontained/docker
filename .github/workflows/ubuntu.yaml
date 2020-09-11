@@ -32,7 +32,7 @@ jobs:
         name: Check Tag Against DockerHub
         id: check-tag
         with:
-          image: ${{ env.IMAGES }}
+          image: library/${{ github.workflow }}
           tag: ${{ github.event.inputs.tag || env.version }}
   multiarch:
     needs: version-check

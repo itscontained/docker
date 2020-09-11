@@ -6,8 +6,10 @@ ARG VERSION=3.0.0.3695
 USER root
 
 RUN \
-  apt-get update \
-  && apt-get install libicu66 mediainfo -y --no-install-recommends \
+  apt-get -qq update \
+  && apt-get -qq install -y --no-install-recommends \
+  	libicu66 \
+	mediainfo \
   && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf \

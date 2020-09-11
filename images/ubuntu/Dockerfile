@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:focal-20200729
 LABEL maintainer="itscontained"
 
 ARG TARGETPLATFORM=linux/amd64
@@ -17,8 +17,8 @@ RUN \
   --no-create-home
 
 RUN \
-  mkdir -p /app /data \
-  && chown -R itscontained:itscontained /app /data
+  mkdir -p /app /config \
+  && chown -R itscontained:itscontained /app /config
 
 RUN set -eux \
   && \
@@ -30,7 +30,6 @@ RUN set -eux \
   && apt-get -qq update \
   && apt-get -qq install -y --no-install-recommends \
     gnupg2 \
-    vim-tiny \
     curl \
     ca-certificates \
   && curl -L -o /sbin/tini https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH} \
@@ -49,10 +48,8 @@ RUN set -eux \
     /var/cache/apt/* \
     /var/tmp/*
 
-WORKDIR /data
+WORKDIR /config
 
 USER itscontained:itscontained
-
-VOLUME [ "/data" ]
 
 ENTRYPOINT [ "/sbin/tini", "--" ]

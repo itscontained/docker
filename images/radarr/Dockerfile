@@ -1,5 +1,4 @@
 FROM ubuntu:focal
-MAINTAINER dirtycajunrice
 
 ARG VERSION=3.0.0.3695
 

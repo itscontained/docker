@@ -11,7 +11,7 @@ on:
         description: 'Ignore existing tag if "true"'
         required: false
 env:
-  IMAGES: ${{ github.repository_owner }}/${{ github.workflow }}
+  IMAGES: library/${{ github.workflow }}
   PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7"
 jobs:
   version-check:
@@ -26,7 +26,7 @@ jobs:
         run: |
           if [ -z "${{ ! github.event.inputs.tag }}" ]
           then
-            echo ::set-env name=version::$(curl -s https://registry.hub.docker.com/v1/repositories/library/ubuntu/tags | jq -r '.[] | select(.name | contains("focal")) | .name'  | tail -n1)
+            echo ::set-env name=version::$(curl -s https://registry.hub.docker.com/v1/repositories/library/${{ github.workflow }}/tags | jq -r '.[] | select(.name | contains("focal")) | .name'  | tail -n1)
           fi
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub

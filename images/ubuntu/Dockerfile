@@ -32,10 +32,12 @@ RUN set -eux \
     gnupg2 \
     curl \
     ca-certificates \
+    vim-tiny \
   && curl -L -o /sbin/tini https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH} \
   && curl -L -o /tini.asc https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH}.asc \
   && gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
   && gpg --batch --verify /tini.asc /sbin/tini \
+  && chmod +x /sbin/tini \
   && gpgconf --kill all \
   && apt-get remove -y gnupg2 \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \

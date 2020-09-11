@@ -36,7 +36,7 @@ jobs:
           tag: ${{ github.event.inputs.tag || env.version }}
   prepare:
     needs: version-check
-    if: ${{ ! needs.version-check.outputs.tag || github.event.inputs.ignore-existing-tag }}
+    if: ${{ ! needs.version-check.outputs.tag || github.events.inputs.ignore-existing-tag }}
     runs-on: ubuntu-latest
     outputs:
       fully-qualified-target-images: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}

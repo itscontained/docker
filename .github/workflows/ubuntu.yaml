@@ -11,7 +11,7 @@ on:
         description: 'Ignore existing tag if "true"'
         required: false
 env:
-  IMAGES: library/${{ github.workflow }}
+  IMAGES: ${{ github.repository_owner }}/${{ github.workflow }}
   PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7"
 jobs:
   version-check:
@@ -32,7 +32,7 @@ jobs:
         name: Check Tag Against DockerHub
         id: check-tag
         with:
-          image: ${{ env.IMAGES }}
+          image: library/${{ github.workflow }}
           tag: ${{ github.event.inputs.tag || env.version }}
   multiarch:
     needs: version-check

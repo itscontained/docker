@@ -24,7 +24,7 @@ jobs:
       - name: Get Upstream Version
         id: check
         run: |
-          if [ -z "${{ ! github.events.inputs.tag }}" ]
+          if [ -z "${{ ! github.event.inputs.tag }}" ]
           then
             echo ::set-env name=version::$(curl -s https://registry.hub.docker.com/v1/repositories/library/ubuntu/tags | jq -r '.[] | select(.name | contains("focal")) | .name'  | tail -n1)
           fi
@@ -36,7 +36,7 @@ jobs:
           tag: ${{ github.event.inputs.tag || env.version }}
   prepare:
     needs: version-check
-    if: ${{ ! needs.version-check.outputs.tag || github.events.inputs.ignore-existing-tag }}
+    if: ${{ ! needs.version-check.outputs.tag || github.event.inputs.ignore-existing-tag }}
     runs-on: ubuntu-latest
     outputs:
       fully-qualified-target-images: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}

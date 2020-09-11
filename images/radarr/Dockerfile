@@ -30,9 +30,7 @@ RUN \
   && tar ixzf /tmp/radarr.tar.gz -C /app/Radarr/bin --strip-components 1 \
   && rm -rf \
     /app/radarr/bin/Radarr.Update \
-	/tmp/* \
-	/var/lib/apt/lists/* \
-	/var/tmp/* \
+	/tmp/radarr.tar.gz \
   && echo "UpdateMethod=docker\nBranch=aphrodite\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/Radarr/package_info
 
 EXPOSE 7878

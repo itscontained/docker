@@ -1,8 +1,0 @@
-name: 'Test Action'
-description: 'Test'
-runs:
-  using: "composite"
-  steps:
-    - shell: bash
-      run: |
-        echo ${{ fromJSON(env.SECRETS).GHCR_USERNAME }}

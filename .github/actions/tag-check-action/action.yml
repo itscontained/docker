@@ -32,11 +32,11 @@ runs:
           echo "⏭️ Skipping check - Using given tag - ${{ inputs.image }}:${{ inputs.tag }}"
           echo "::set-output name=exists::true"
           echo "::set-output name=tag::${{ inputs.tag }}"
-          return
+          exit
         elif [[ "${{ inputs.skip }}" == "true" ]] && [[ -z ${VERSION} ]]
         then
           echo "⏮️ Requested skip check but missing input tag"
-          return 1
+          exit 1
         fi
         echo "🔍 Checking ${{ inputs.image }} for a tag that matches ${{ inputs.tag }}"
         TAG="$(curl -s https://registry.hub.docker.com/v1/repositories/${{ inputs.image }}/tags | jq -r '.[] | select(.name==env.VERSION) | .name')"

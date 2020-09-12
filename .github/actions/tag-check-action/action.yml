@@ -30,7 +30,7 @@ runs:
         if [[ "${{ inputs.skip }}" == "true" ]] && [[ -n ${VERSION} ]]
         then
           echo "⏭️ Skipping check - Using given tag - ${{ inputs.image }}:${{ inputs.tag }}"
-          echo "::set-output name=exists::true"
+          echo "::set-output name=exists::false"
           echo "::set-output name=tag::${{ inputs.tag }}"
           exit
         elif [[ "${{ inputs.skip }}" == "true" ]] && [[ -z ${VERSION} ]]

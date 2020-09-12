@@ -1,6 +1,5 @@
 FROM itscontained/ubuntu:focal-20200729
 
-ARG TARGETPLATFORM=linux/amd64
 ARG VERSION=21.0
 
 USER root

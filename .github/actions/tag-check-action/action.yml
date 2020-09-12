@@ -33,7 +33,7 @@ runs:
           echo "::set-output name=exists::true"
           echo "::set-output name=tag::${{ inputs.tag }}"
           return
-        else if [[ "${{ inputs.skip }}" == "true" ]] && [[ -z "${{ inputs.tag }}" ]]
+        elif [[ "${{ inputs.skip }}" == "true" ]] && [[ -z "${{ inputs.tag }}" ]]
           echo "⏮️ Requested skip check but missing input tag"
           return 1
         fi

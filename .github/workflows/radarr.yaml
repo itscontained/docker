@@ -17,22 +17,30 @@ jobs:
   version-check:
     runs-on: ubuntu-latest
     outputs:
+      exists: ${{ steps.check-tag.outputs.exists }}
       tag: ${{ steps.check-tag.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get Upstream Version
         id: check
-        run: echo ::set-env name=version::$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]
+          then
+            echo ::set-env name=version::${{ github.event.inputs.tag }}
+          else
+            echo ::set-env name=version::$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
+          fi
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag
         with:
           image: ${{ env.IMAGES }}
           tag: ${{ github.event.inputs.tags || env.version }}
+          skip: ${{ github.event.inputs.ignore-existing-tag }}
   multiarch:
     needs: version-check
-    if: ${{ ! needs.version-check.outputs.tag || github.event.inputs.ignore-existing-tag }}
+    if: ${{ ! needs.version-check.outputs.exists }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

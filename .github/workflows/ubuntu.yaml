@@ -61,6 +61,10 @@ jobs:
           install: true
           version: latest
           driver-opts: image=moby/buildkit:master
+      - name: Docker Multi Login
+        uses: ./.github/actions/docker-multi-login-action
+        env:
+          secrets: ${{ toJSON(secrets) }}
       - name: Build and Push
         uses: docker/build-push-action@v2
         with:
@@ -71,6 +75,7 @@ jobs:
           tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+          pull: true
           push: true
       - name: Inspect
         run: |

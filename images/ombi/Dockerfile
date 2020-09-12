@@ -27,11 +27,11 @@ RUN \
     'linux/arm/v7') export ARCH='linux-arm.' ;; \
   esac \
   && URL=$(curl -s https://api.github.com/repos/tidusjar/Ombi.Releases/releases | \
-       jq -r '.[] | select(.tag_name | contains(env.VERSION)) | .assets[] | select(.browser_download_url | contains(env.ARCH)) | .browser_download_url')
+       jq -r '.[] | select(.tag_name | contains(env.VERSION)) | .assets[] | select(.browser_download_url | contains(env.ARCH)) | .browser_download_url') \
   && curl -Lso /tmp/ombi.tgz "${URL}" \
   && mkdir -p /app/ombi \
   && tar xzf /tmp/ombi.tgz -C /app/ombi \
-  && chmod +x /app/ombi/Ombi
+  && chmod +x /app/ombi/Ombi \
   && rm -rf /tmp/ombi.tgz
 
 EXPOSE 5000

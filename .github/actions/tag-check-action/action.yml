@@ -27,13 +27,13 @@ runs:
       env:
         VERSION: ${{ inputs.tag }}
       run: |
-        if [[ ${{ inputs.skip }} ]]  && [[ ${{ inputs.tag }} ]]
+        if ${{ inputs.skip }} && ${{ inputs.tag }}
         then
           echo "⏭️ Skipping check - Using given tag - ${{ inputs.image }}:${{ inputs.tag }}"
           echo "::set-output name=exists::true"
           echo "::set-output name=tag::${{ inputs.tag }}"
           return
-        else if [[ ${{ inputs.skip }} ]] && [[ ${{ ! inputs.tag }} ]]
+        else if ${{ inputs.skip }} && ${{ ! inputs.tag }}
           echo "⏮️ Requested skip check but missing input tag"
           return 1
         fi

@@ -24,7 +24,7 @@ jobs:
       - name: Get Upstream Version
         id: check
         run: |
-          if [ -z "${{ ! github.event.inputs.tag }}" ]
+          if [ -z "${{ github.event.inputs.tag }}" ]
           then
             echo ::set-env name=version::$(curl -s https://registry.hub.docker.com/v1/repositories/library/${{ github.workflow }}/tags | jq -r '.[] | select(.name | contains("focal")) | .name'  | tail -n1)
           fi

@@ -7,7 +7,7 @@ USER root
 
 RUN \
   apt-get -qq update \
-  && apt-get -qq install -y --no-install-recommends
+  && apt-get -qq install -y --no-install-recommends \
        libicu66 \
        jq \
   && apt-get autoremove -y \

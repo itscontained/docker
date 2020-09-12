@@ -40,7 +40,7 @@ jobs:
           skip: ${{ github.event.inputs.ignore-existing-tag }}
   multiarch:
     needs: version-check
-    if: ${{ contains(needs.version-check.outputs.exists, 'false') }}
+    if: ${{ ! needs.version-check.outputs.exists }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

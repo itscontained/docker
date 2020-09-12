@@ -17,7 +17,7 @@ outputs:
     value: ${{ steps.check-tag.outputs.tag }}
   exists:
     description: "Return boolean of exist status"
-    value: ${{ steps.check-tag.outputs.tag }}
+    value: ${{ steps.check-tag.outputs.exists }}
 runs:
   using: "composite"
   steps:

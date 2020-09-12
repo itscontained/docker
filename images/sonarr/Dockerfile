@@ -45,6 +45,6 @@ RUN \
 	    /tmp/sonarr.tar.gz \
   && echo "UpdateMethod=docker\nBranch=phantom-develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/sonarr/package_info
 
-EXPOSE 7878
+EXPOSE 8989
 
 CMD umask ${UMASK} && /usr/bin/mono --debug /app/sonarr/bin/Sonarr.exe -nobrowser -data=/config

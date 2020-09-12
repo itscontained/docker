@@ -27,28 +27,28 @@ RUN set -eux \
     'linux/arm64') export ARCH='arm64' ;; \
     'linux/arm/v7') export ARCH='armhf' ;; \
   esac \
-  && apt-get -qq update \
-  && apt-get -qq install -y --no-install-recommends \
-    gnupg2 \
-    curl \
-    ca-certificates \
-    vim-tiny \
+  && apt -qq update \
+  && apt -qq install -y --no-install-recommends \
+       gnupg2 \
+       curl \
+       ca-certificates \
+       vim-tiny \
   && curl -L -o /sbin/tini https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH} \
   && curl -L -o /tini.asc https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH}.asc \
   && gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
   && gpg --batch --verify /tini.asc /sbin/tini \
   && chmod +x /sbin/tini \
   && gpgconf --kill all \
-  && apt-get remove -y gnupg2 \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && apt-get autoremove -y \
-  && apt-get clean \
+  && apt remove -y gnupg2 \
+  && apt purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && apt autoremove -y \
+  && apt clean \
   && rm -rf \
-    /tini.asc \
-    /tmp/* \
-    /var/lib/apt/lists/* \
-    /var/cache/apt/* \
-    /var/tmp/*
+       /tini.asc \
+       /tmp/* \
+       /var/lib/apt/lists/* \
+       /var/cache/apt/* \
+       /var/tmp/*
 
 WORKDIR /config
 

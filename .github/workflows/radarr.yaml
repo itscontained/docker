@@ -36,12 +36,12 @@ jobs:
         id: check-tag
         with:
           image: ${{ env.IMAGES }}
-          tag: ${{ github.event.inputs.tags || env.version }}
+          tag: ${{ github.event.inputs.tag || env.version }}
           skip: ${{ github.event.inputs.ignore-existing-tag }}
   multiarch:
     needs: version-check
-    if: ${{ contains(needs.version-check.outputs.exists, 'false') }}
     runs-on: ubuntu-latest
+    if: ${{ contains(needs.version-check.outputs.exists, 'false') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -71,8 +71,6 @@ jobs:
           build-args: VERSION=${{ needs.version-check.outputs.tag }}
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
           pull: true
           push: true
       - name: Inspect

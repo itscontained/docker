@@ -8,14 +8,14 @@ USER root
 RUN \
   apt-get -qq update \
   && apt-get -qq install -y --no-install-recommends \
-  	libicu66 \
-	mediainfo \
+  	   libicu66 \
+	     mediainfo \
   && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf \
-    /tmp/* \
-    /var/lib/apt/lists/* \
-    /var/tmp/ \
+       /tmp/* \
+       /var/lib/apt/lists/* \
+       /var/tmp/ \
   && echo umask ${UMASK} >> /etc/bash.bashrc
 
 USER itscontained
@@ -28,13 +28,13 @@ RUN \
   esac \
   && curl -Lso /tmp/radarr.tar.gz \
     "https://radarr.lidarr.audio/v1/update/aphrodite/updatefile?version=${VERSION}&os=linux&runtime=netcore&arch=${ARCH}" \
-  && mkdir -p /app/Radarr/bin \
-  && tar ixzf /tmp/radarr.tar.gz -C /app/Radarr/bin --strip-components 1 \
+  && mkdir -p /app/radarr/bin \
+  && tar ixzf /tmp/radarr.tar.gz -C /app/radarr/bin --strip-components 1 \
   && rm -rf \
-    /app/radarr/bin/Radarr.Update \
-	/tmp/radarr.tar.gz \
+       /app/radarr/bin/Radarr.Update \
+	     /tmp/radarr.tar.gz \
   && echo "UpdateMethod=docker\nBranch=aphrodite\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/Radarr/package_info
 
 EXPOSE 7878
 
-CMD umask ${UMASK} && /app/Radarr/bin/Radarr -nobrowser -data=/config
+CMD umask ${UMASK} && /app/radarr/bin/Radarr -nobrowser -data=/config

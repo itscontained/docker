@@ -27,10 +27,12 @@ jobs:
         run: |
           if [ -n "${{ github.event.inputs.tag }}" ]
           then
-            echo ::set-env name=version::${{ github.event.inputs.tag }}
+            VER=${{ github.event.inputs.tag }}
           else
-            echo ::set-env name=version::$(curl -s "https://api.github.com/repos/nzbget/nzbget/releases/latest" | jq --raw-output '.tag_name')
+            VER=$(curl -s "https://api.github.com/repos/nzbget/nzbget/releases/latest" | jq --raw-output '.tag_name')
+            VER=${VER#*v}
           fi
+          echo "::set-env name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag

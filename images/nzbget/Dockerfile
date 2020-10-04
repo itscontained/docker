@@ -25,11 +25,11 @@ USER itscontained
 RUN \
   curl -Lso /tmp/nzbget.run \
     "https://github.com/nzbget/nzbget/releases/download/v${VERSION}/nzbget-${VERSION}-bin-linux.run" \
-  && mkdir -p /app/nzbget/ \
-  && sh /tmp/nzbget.run --destdir /app/nzbget \
+  && mkdir -p /app/nzbget/bin \
+  && sh /tmp/nzbget.run --destdir /app/nzbget/bin \
   && rm -rf \
        /tmp/nzbget-${VERSION}-bin-linux.run
 
 EXPOSE 6789
 
-CMD umask ${UMASK} && /app/nzbget/nzbget -s -c /config/nzbget.conf -o OutputMode=log
+CMD umask ${UMASK} && /app/nzbget/bin/nzbget -s -c /config/nzbget.conf -o OutputMode=log

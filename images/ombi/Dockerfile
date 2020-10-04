@@ -1,7 +1,7 @@
-FROM itscontained/ubuntu:focal-20200729
+FROM itscontained/ubuntu:focal-20200925
 
-ARG TARGETPLATFORM=linux/amd64
-ARG VERSION=3.0.0.3695
+ARG TARGETPLATFORM
+ARG VERSION
 
 USER root
 

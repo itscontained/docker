@@ -1,6 +1,6 @@
-FROM itscontained/ubuntu:focal-20200729
+FROM itscontained/ubuntu:focal-20200925
 
-ARG VERSION=21.0
+ARG VERSION
 
 USER root
 

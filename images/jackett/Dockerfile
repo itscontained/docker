@@ -3,6 +3,8 @@ FROM itscontained/ubuntu:focal-20200925
 ARG TARGETPLATFORM
 ARG VERSION
 
+# Sets Jackett config directory
+# https://github.com/Jackett/Jackett#home-directory-1
 ENV XDG_CONFIG_HOME=/config
 
 USER root

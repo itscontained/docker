@@ -27,10 +27,11 @@ jobs:
         run: |
           if [ -n "${{ github.event.inputs.tag }}" ]
           then
-            echo ::set-env name=version::${{ github.event.inputs.tag }}
+            VER=${{ github.event.inputs.tag }}
           else
-            echo ::set-env name=version::$(curl -s https://registry.hub.docker.com/v1/repositories/library/${{ github.workflow }}/tags | jq -r '.[] | select(.name | contains("focal")) | .name'  | tail -n1)
+            VER=$(curl -s https://registry.hub.docker.com/v1/repositories/library/${{ github.workflow }}/tags | jq -r '.[] | select(.name | contains("focal")) | .name'  | tail -n1)
           fi
+          echo "::set-env name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag

@@ -33,7 +33,7 @@ RUN \
   apt-get -qq update \
   && apt-get install -y --no-install-recommends \
     python3 \
-    libtorrent-rasterbar \
+    libtorrent-rasterbar-dev \
     p7zip-full \
     unrar \
     geoip-bin \

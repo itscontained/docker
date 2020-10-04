@@ -27,10 +27,11 @@ jobs:
         run: |
           if [ -n "${{ github.event.inputs.tag }}" ]
           then
-            echo "::set-env name=version::${{ github.event.inputs.tag }}"
+            VER=${{ github.event.inputs.tag }}
           else
-            echo "::set-env name=version::$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')"
+            VER=$(curl -s "https://radarr.lidarr.audio/v1/update/aphrodite/changes?os=linux" | jq -r '.[0].version')
           fi
+          echo "::set-env name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag

@@ -27,11 +27,12 @@ jobs:
         run: |
           if [ -n "${{ github.event.inputs.tag }}" ]
           then
-            echo "::set-env name=version::${{ github.event.inputs.tag }}"
+            VER=${{ github.event.inputs.tag }}
           else
             VER=$(curl -s https://api.github.com/repos/tidusjar/Ombi.Releases/releases | jq -r .[0].tag_name)
-            echo "::set-env name=version::${VER#*v}"
+            VER=${VER#*v}
           fi
+          echo "::set-env name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag

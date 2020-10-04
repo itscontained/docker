@@ -43,6 +43,6 @@ RUN \
     /tmp/jackett.tar.gz \
   && echo "UpdateMethod=docker\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/jackett/package_info
 
-EXPOSE 7878
+EXPOSE 9117
 
 CMD umask ${UMASK} && /app/jackett/bin/jackett --NoUpdates

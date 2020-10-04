@@ -35,6 +35,6 @@ RUN \
 	     /tmp/lidarr.tar.gz \
   && echo "UpdateMethod=docker\nBranch=develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/lidarr/package_info
 
-EXPOSE 7878
+EXPOSE 8686
 
 CMD umask ${UMASK} && /app/lidarr/bin/lidarr -nobrowser -data=/config

@@ -1,0 +1,83 @@
+name: tautulli
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Use this tag instead of most recent'
+        required: false
+      ignore-existing-tag:
+        description: 'Ignore existing tag if "true"'
+        required: false
+env:
+  IMAGES: ${{ github.repository_owner }}/${{ github.workflow }}
+  PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7"
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    outputs:
+      exists: ${{ steps.check-tag.outputs.exists }}
+      tag: ${{ steps.check-tag.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Upstream Version
+        id: check
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]
+          then
+            VER=${{ github.event.inputs.tag }}
+          else
+            VER=$(curl -sX GET "https://api.github.com/repos/Tautulli/Tautulli/releases/latest" | jq -r '. | .tag_name')
+            VER=${VER#*v}
+          fi
+          echo "::set-env name=version::${VER}"
+      - uses: ./.github/actions/tag-check-action
+        name: Check Tag Against DockerHub
+        id: check-tag
+        with:
+          image: ${{ env.IMAGES }}
+          tag: ${{ github.event.inputs.tag || env.version }}
+          skip: ${{ github.event.inputs.ignore-existing-tag }}
+  multiarch:
+    needs: version-check
+    runs-on: ubuntu-latest
+    if: ${{ contains(needs.version-check.outputs.exists, 'false') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/docker-target-image-list-action
+        name: Generate Target Images
+        id: gen-tags
+        with:
+          images: ${{ env.IMAGES }}
+          tags: ${{ needs.version-check.outputs.tag }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+          version: latest
+          driver-opts: image=moby/buildkit:master
+      - name: Docker Multi Login
+        uses: ./.github/actions/docker-multi-login-action
+        env:
+          secrets: ${{ toJSON(secrets) }}
+      - name: Build and Push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./images/${{ github.workflow }}/Dockerfile
+          build-args: VERSION=${{ needs.version-check.outputs.tag }}
+          platforms: ${{ env.PLATFORMS }}
+          tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}
+          pull: true
+          push: true
+      - name: Inspect
+        run: |
+          IFS=',' read -r -a images <<< "${{ steps.gen-tags.outputs.fully-qualified-target-images }}"
+          for image in "${images[@]}"; do
+              docker buildx imagetools inspect ${image}
+          done

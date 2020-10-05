@@ -1,5 +1,6 @@
 FROM itscontained/ubuntu:focal-20200925 as builder
 
+ARG TARGETPLATFORM
 ARG VERSION
 
 USER root
@@ -15,7 +16,10 @@ RUN \
 WORKDIR /tmp
 
 RUN git clone --depth 1 -b release-${VERSION} https://github.com/qbittorrent/qBittorrent.git . \
-    && ./configure --disable-gui --disable-stacktrace \
+    && case "${TARGETPLATFORM}" in \
+         'linux/arm/v7') export EXTRA_CFG_ARG=--with-boost-libdir=/usr/lib/arm-linux-gnueabihf ;; \
+       esac \
+    && ./configure ${EXTRA_CFG_ARG} --disable-gui --disable-stacktrace \
     && make \
     && make install
 
@@ -40,6 +44,9 @@ RUN \
     unrar \
     geoip-bin \
     unzip \
+  && case "${TARGETPLATFORM}" in \
+         'linux/arm/v7') apt-get -qq install -y --no-install-recommends build-essential ;; \
+     esac \
   && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf \

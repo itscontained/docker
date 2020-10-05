@@ -9,6 +9,9 @@ RUN \
   && apt-get -qq install -y --no-install-recommends \
     python3 \
     python3-pip \
+  && case "${TARGETPLATFORM}" in \
+         'linux/arm/v7') apt-get -qq install -y --no-install-recommends build-essential ;; \
+     esac \
   && pip3 install --no-cache-dir -U \
 	  mock \
 	  plexapi \

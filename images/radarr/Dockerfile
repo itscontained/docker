@@ -33,7 +33,7 @@ RUN \
   && rm -rf \
        /app/radarr/bin/Radarr.Update \
 	     /tmp/radarr.tar.gz \
-  && echo "UpdateMethod=docker\nBranch=develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/radarr/package_info
+  && echo "UpdateMethod=docker\nBranch=nightly\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/radarr/package_info
 
 EXPOSE 7878
 

@@ -15,7 +15,7 @@ RUN \
 WORKDIR /tmp
 
 RUN git clone --depth 1 -b release-${VERSION} https://github.com/qbittorrent/qBittorrent.git . \
-    && ./configure --disable-gui \
+    && ./configure --disable-gui --disable-stacktrace \
     && make \
     && make install
 
@@ -33,7 +33,9 @@ RUN \
   apt-get -qq update \
   && apt-get install -y --no-install-recommends \
     python3 \
-    libtorrent-rasterbar-dev \
+    libtorrent-rasterbar9 \
+    libqt5network5 \
+    libqt5xml5 \
     p7zip-full \
     unrar \
     geoip-bin \

@@ -35,18 +35,19 @@ USER root
 
 RUN \
   apt-get -qq update \
-  && apt-get install -y --no-install-recommends \
-    python3 \
-    libtorrent-rasterbar9 \
-    libqt5network5 \
-    libqt5xml5 \
-    p7zip-full \
-    unrar \
-    geoip-bin \
-    unzip \
   && case "${TARGETPLATFORM}" in \
-         'linux/arm/v7') apt-get -qq install -y --no-install-recommends build-essential ;; \
+         'linux/arm/v7') export EXTRA_INSTALL_ARG=build-essential ;; \
      esac \
+  && apt-get install -y --no-install-recommends \
+       python3 \
+       libtorrent-rasterbar9 \
+       libqt5network5 \
+       libqt5xml5 \
+       p7zip-full \
+       unrar \
+       geoip-bin \
+       unzip \
+       ${EXTRA_INSTALL_ARG} \
   && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf \

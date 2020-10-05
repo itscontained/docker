@@ -1,4 +1,4 @@
-name: radarr
+name: jackett
 on:
   schedule:
     - cron: '*/30 * * * *'
@@ -29,7 +29,8 @@ jobs:
           then
             VER=${{ github.event.inputs.tag }}
           else
-            VER=$(curl -s "https://radarr.servarr.com/v1/update/nightly/changes?os=linux" | jq -r '.[0].version')
+            VER=$(curl -sX GET "https://api.github.com/repos/Jackett/Jackett/releases/latest" | jq -r .tag_name)
+            VER=${VER#*v}
           fi
           echo "::set-env name=version::${VER}"
       - uses: ./.github/actions/tag-check-action

@@ -14,38 +14,3 @@ The architectures supported by this image are:
 | Architecture | Tag |	
 | :----: | --- |	
 | x86-64 | latest |	
-
-## Version Tags	
-
-This image provides various versions that are available via tags.	
-`latest` tag usually provides the latest available version.	
-
-| Tag | Description |	
-| :----: | --- |	
-| latest | Newest v3 release from Sonarr |	
-| {semver} | Individual releases as they come |	
-
-## Directory Locations	
-Default Sonarr installation locations as defined in their 	
-[v3 downloads instructions for ubuntu](https://sonarr.tv/#downloads-v3-linux-ubuntu)	
-
-| Folder Type | Location |	
-| :----: | --- |	
-| Executable | /usr/lib/sonarr/bin |	
-| Config | /var/lib/sonarr |	
-
-## Usage	
-### Parameters	
-This is built the way docker initially intended. That means all parameters are things you can set regardless of container.	
-
-### Example	
-```bash	
-docker run \	
-    --name sonarr \	
-    --publish 8989:8989 \	
-    --volume <host config path>:/var/lib/sonarr \	
-    --rm \	
-    --detach \	
-    --user 568:568 \	
-    itscontained/sonarr:latest	
-```

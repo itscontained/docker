@@ -26,15 +26,15 @@ RUN \
     'linux/arm64') export ARCH='arm64' ;; \
     'linux/arm/v7') export ARCH='arm' ;; \
   esac \
-  && curl -Lso /tmp/radarr.tar.gz \
-    "https://radarr.servarr.com/v1/update/nightly/updatefile?version=${VERSION}&os=linux&runtime=netcore&arch=${ARCH}" \
-  && mkdir -p /app/radarr/bin \
-  && tar ixzf /tmp/radarr.tar.gz -C /app/radarr/bin --strip-components 1 \
+  && curl -Lso /tmp/lidarr.tar.gz \
+    "https://lidarr.servarr.com/v1/update/nightly/updatefile?version=${VERSION}&os=linux&runtime=netcore&arch=${ARCH}" \
+  && mkdir -p /app/lidarr/bin \
+  && tar ixzf /tmp/lidarr.tar.gz -C /app/lidarr/bin --strip-components 1 \
   && rm -rf \
-       /app/radarr/bin/Radarr.Update \
-	     /tmp/radarr.tar.gz \
-  && echo "UpdateMethod=docker\nBranch=develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/radarr/package_info
+       /app/lidarr/bin/lidarr.Update \
+	     /tmp/lidarr.tar.gz \
+  && echo "UpdateMethod=docker\nBranch=develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team itscontained](https://github.com/itscontained)" > /app/lidarr/package_info
 
-EXPOSE 7878
+EXPOSE 8686
 
-CMD umask ${UMASK} && /app/radarr/bin/Radarr -nobrowser -data=/config
+CMD umask ${UMASK} && /app/lidarr/bin/lidarr -nobrowser -data=/config

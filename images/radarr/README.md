@@ -14,36 +14,3 @@ The architectures supported by this image are:
 | Architecture | Tag |
 | :----: | --- |
 | x86-64 | latest |
-
-## Version Tags
-
-This image provides various versions that are available via tags. `latest` tag usually provides the latest available version.
-
-| Tag | Description |
-| :----: | --- |
-| latest | Newest v3 release from Radarr |
-| {semver} | Individual releases as they come |
-
-## Directory Locations
-Default Radarr installation locations as defined in their [installation wiki page](https://github.com/Radarr/Radarr/wiki/Installation)
-
-| Folder Type | Location |
-| :----: | --- |
-| Executable | /opt/Radarr/bin |
-| Config | /var/lib/radarr |
-
-## Usage
-### Parameters
-This is built the way docker initially intended. That means all parameters are things you can set regardless of container.
-
-### Example
-```bash
-docker run \
-    --name radarr \
-    --publish 7878:7878 \
-    --volume <host config path>:/var/lib/radarr \
-    --rm \
-    --detach \
-    --user 568:568 \
-    itscontained/radarr:latest
-```

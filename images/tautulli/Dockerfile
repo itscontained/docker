@@ -1,5 +1,6 @@
 FROM itscontained/ubuntu:focal-20200925
 
+ARG TARGETPLATFORM
 ARG VERSION
 
 USER root

@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20200729
+FROM ubuntu:focal-20200925
 LABEL maintainer="itscontained"
 
 ARG TARGETPLATFORM=linux/amd64

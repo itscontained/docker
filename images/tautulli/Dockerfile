@@ -25,7 +25,7 @@ USER itscontained
 
 RUN \
   curl -Lso /tmp/tautulli.tar.gz \
-    "https://github.com/Tautulli/Tautulli/archive/${VERSION}.tar.gz" \
+    "https://github.com/Tautulli/Tautulli/archive/v${VERSION}.tar.gz" \
   && mkdir -p /app/tautulli/bin \
   && tar ixzf /tmp/tautulli.tar.gz -C /app/tautulli/bin --strip-components 1 \
   && echo "${VERSION}" > /app/tautulli/bin/version.txt \

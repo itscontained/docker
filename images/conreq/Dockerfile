@@ -1,5 +1,6 @@
 FROM itscontained/ubuntu:focal-20200925
 
+ARG TARGETPLATFORM
 ARG VERSION
 
 ENV DATA_DIR=/config
@@ -14,6 +15,9 @@ RUN \
     python3-pip \
     build-essential \
     jq \
+  && case "${TARGETPLATFORM}" in \
+         'linux/arm/v7') apt-get -qq install -y --no-install-recommends libffi-dev libssl-dev;; \
+     esac \
   && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf \

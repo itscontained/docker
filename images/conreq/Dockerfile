@@ -13,6 +13,7 @@ RUN \
     python3-dev \
     python3-pip \
     build-essential \
+    jq \
   && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf \

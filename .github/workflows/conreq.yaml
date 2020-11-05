@@ -71,7 +71,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./images/${{ github.workflow }}/
-          file: .
+          file: Dockerfile
           build-args: VERSION=${{ needs.version-check.outputs.tag }}
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ steps.gen-tags.outputs.fully-qualified-target-images }}

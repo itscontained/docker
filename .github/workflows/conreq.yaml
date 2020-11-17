@@ -33,7 +33,6 @@ jobs:
             VER=$(curl -s https://api.github.com/repos/archmonger/conreq/commits/main | jq -r .sha)
             BUILDVER=${VER:0:7}
           fi
-          echo "::set-env name=version::${VER}"
           echo "::set-output name=build-version::${BUILDVER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub

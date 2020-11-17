@@ -32,13 +32,13 @@ jobs:
             VER=$(curl -s https://api.github.com/repos/tidusjar/Ombi.Releases/releases | jq -r .[0].tag_name)
             VER=${VER#*v}
           fi
-          echo "::set-env name=version::${VER}"
+          echo "::set-output name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag
         with:
           image: ${{ env.IMAGES }}
-          tag: ${{ github.event.inputs.tag || env.version }}
+          tag: ${{ github.event.inputs.tag || steps.check.outputs.version }}
           skip: ${{ github.event.inputs.ignore-existing-tag }}
   multiarch:
     needs: version-check

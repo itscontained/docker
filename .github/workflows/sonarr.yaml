@@ -31,13 +31,13 @@ jobs:
           else
             VER=$(curl -s "https://services.sonarr.tv/v1/download/phantom-develop?version=3" | jq -r '.version')
           fi
-          echo "::set-env name=version::${VER}"
+          echo "::set-output name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag
         with:
           image: ${{ env.IMAGES }}
-          tag: ${{ github.event.inputs.tag || env.version }}
+          tag: ${{ github.event.inputs.tag || steps.check.outputs.version }}
           skip: ${{ github.event.inputs.ignore-existing-tag }}
   multiarch:
     needs: version-check

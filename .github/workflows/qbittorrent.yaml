@@ -32,7 +32,7 @@ jobs:
             VER=$(curl -s https://api.github.com/repos/qbittorrent/qBittorrent/tags | jq --raw-output '.[0].name')
             VER=${VER#*release-}
           fi
-          echo "::set-env name=version::${VER}"
+          echo "::set-output name=version::${VER}"
       - uses: ./.github/actions/tag-check-action
         name: Check Tag Against DockerHub
         id: check-tag

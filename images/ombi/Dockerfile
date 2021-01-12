@@ -26,7 +26,7 @@ RUN \
     'linux/arm64') export ARCH='linux-arm64' ;; \
     'linux/arm/v7') export ARCH='linux-arm.' ;; \
   esac \
-  && URL=$(curl -s https://api.github.com/repos/tidusjar/Ombi.Releases/releases | \
+  && URL=$(curl -s https://api.github.com/repos/Ombi-app/Ombi.Releases/releases | \
        jq -r '.[] | select(.tag_name | contains(env.VERSION)) | .assets[] | select(.browser_download_url | contains(env.ARCH)) | .browser_download_url') \
   && curl -Lso /tmp/ombi.tgz "${URL}" \
   && mkdir -p /app/ombi \

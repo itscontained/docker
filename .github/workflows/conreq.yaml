@@ -1,7 +1,8 @@
 name: conreq
 on:
-  schedule:
-    - cron: '*/30 * * * *'
+  # removed until a release exists
+  # schedule:
+  #  - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       tag:

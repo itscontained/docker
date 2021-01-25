@@ -11,7 +11,7 @@ RUN git clone https://github.com/gregzaal/Auto-Voice-Channels.git . \
     && git checkout ${VERSION:-master}
     && mkdir guilds \
     && pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir uvloop
+    && pip install --no-cache-dir uvloop \
     && rm -r .git .github
 
 CMD python auto-voice-channels.py
